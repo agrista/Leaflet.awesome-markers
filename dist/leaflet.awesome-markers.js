@@ -29,7 +29,6 @@
             prefix: 'glyphicon',
             spinClass: 'fa-spin',
             extraClasses: '',
-            icon: 'home',
             markerColor: 'blue',
             iconColor: 'white'
         },
@@ -42,7 +41,7 @@
             var div = document.createElement('div'),
                 options = this.options;
 
-            if (options.icon) {
+            if (options.icon || options.html) {
                 div.innerHTML = this._createInner();
             }
 
@@ -56,27 +55,31 @@
         },
 
         _createInner: function() {
-            var iconClass, iconSpinClass = "", iconColorClass = "", iconColorStyle = "", options = this.options;
+            var elClass, elSpinClass = "", elColorClass = "", elColorStyle = "", options = this.options;
 
-            if(options.icon.slice(0,options.prefix.length+1) === options.prefix + "-") {
-                iconClass = options.icon;
-            } else {
-                iconClass = options.prefix + "-" + options.icon;
-            }
-
-            if(options.spin && typeof options.spinClass === "string") {
-                iconSpinClass = options.spinClass;
-            }
-
-            if(options.iconColor) {
-                if(options.iconColor === 'white' || options.iconColor === 'black') {
-                    iconColorClass = "icon-" + options.iconColor;
+            if (options.icon) {
+                if (options.icon.slice(0, options.prefix.length + 1) === options.prefix + "-") {
+                    elClass = options.icon;
                 } else {
-                    iconColorStyle = "style='color: " + options.iconColor + "' ";
+                    elClass = options.prefix + "-" + options.icon;
                 }
             }
 
-            return "<i " + iconColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + iconClass + " " + iconSpinClass + " " + iconColorClass + "'></i>";
+            if (options.spin && typeof options.spinClass === "string") {
+                elSpinClass = options.spinClass;
+            }
+
+            if (options.iconColor) {
+                if(options.iconColor === 'white' || options.iconColor === 'black') {
+                    elColorClass = "icon-" + options.iconColor;
+                } else {
+                    elColorStyle = "style='color: " + options.iconColor + "' ";
+                }
+            }
+
+            return (options.html ?
+                "<span " + elColorStyle + "class='" + options.extraClasses + " " + elSpinClass + " " + elColorClass + "'>" + options.html + "</span>" :
+                "<i " + elColorStyle + "class='" + options.extraClasses + " " + options.prefix + " " + elClass + " " + elSpinClass + " " + elColorClass + "'></i>");
         },
 
         _setIconStyles: function (img, name) {
@@ -112,9 +115,9 @@
 
             this._setIconStyles(div, 'shadow');
             return div;
-      }
+        }
     });
-        
+
     L.AwesomeMarkers.icon = function (options) {
         return new L.AwesomeMarkers.Icon(options);
     };
